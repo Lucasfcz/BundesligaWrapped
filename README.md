@@ -2,7 +2,7 @@
 
 > Retrospectiva personalizada da Bundesliga, desenvolvido para o AWS World Sports Innovation Cup 2026
 
-Aplicação web full-stack que transforma dados reais da Bundesliga 2024/25 em uma experiência de fã personalizada estilo Spotify Wrapped. O usuário insere seu Fan ID e recebe uma retrospectiva animada em 6 slides — gerada com dados reais da DFL e narrativas criadas por IA.
+Aplicação web full-stack que transforma dados reais da Bundesliga 2024/25 em uma experiência de fã personalizada estilo Spotify Wrapped. O usuário insere seu Fan ID e recebe uma retrospectiva animada em 6 slides gerada com dados reais da DFL e narrativas criadas por IA.
 
 ---
 
@@ -30,21 +30,22 @@ S3 Bucket (Dados DFL)
         │
         ▼
 ┌─────────────────────────────┐
-│        API Spring Boot       │
+│        API Spring Boot      │
 │                             │
 │  5 Importers → PostgreSQL   │
 │  WrappedGeneratorService    │
-│  ClaudeNarrativeService     │
+│  NarrativeService           │
 │  REST: GET /api/wrapped/{id}│
 └────────────┬────────────────┘
              │ JSON
              ▼
 ┌─────────────────────────────┐
-│      React + TypeScript      │
+│      React + TypeScript     │
 │                             │
 │  6 slides animados          │
 │  Sistema de partículas      │
-│  Compartilhamento via screenshot │
+│  Compartilhamento via       │
+│  screenshot                 │                          
 └─────────────────────────────┘
 ```
 
@@ -57,7 +58,7 @@ S3 Bucket (Dados DFL)
 - **Spring Data JPA** + **Hibernate 7** + **PostgreSQL 16**
 - **Flyway 11** — migrations de banco de dados
 - **Spring Cloud AWS 4.0** — integração com S3
-- **Anthropic Claude API** — geração de narrativas por IA
+- **Groq API** — geração de narrativas por IA
 - **SpringDoc OpenAPI 3** — documentação Swagger
 - **Docker** — banco de dados containerizado
 
@@ -74,55 +75,40 @@ S3 Bucket (Dados DFL)
 
 Dados reais da DFL para a temporada 2024/25 da Bundesliga, armazenados no AWS S3:
 
-| Tabela | Registros |
-|--------|-----------|
-| clubs | 18 |
-| matches | 306 |
-| players | ~500 |
+| Tabela | Registros           |
+|--------|---------------------|
+| clubs | 18                  |
+| matches | 306                 |
+| players | 892                 |
 | player_stats | 34 (Bayern München) |
-| user_engagements | 26.242 |
+| user_engagements | 26.242              |
 
 ---
 
-## Como Rodar
+## Como testar
 
-### Pré-requisitos
+Acesse: **https://bundesligawrapped-1-7ksh.onrender.com**
 
-- Java 21+
-- Docker
-- Node.js 20+
-- Credenciais AWS (acesso ao S3)
-- Chave da API Anthropic
+> ⚠️ O backend está hospedado no plano gratuito do Render e pode demorar
+> para responder na primeira requisição (cold start). Aguarde o carregamento.
 
-### Backend
+### Fan IDs para teste
 
-```bash
-# 1. Sobe o PostgreSQL
-docker compose up -d
+Cole qualquer um dos IDs abaixo no campo da tela inicial:
 
-# 2. Configura as variáveis de ambiente
-export ANTHROPIC_API_KEY=sk-ant-...
-export AWS_ACCESS_KEY_ID=...
-export AWS_SECRET_ACCESS_KEY=...
-export AWS_SESSION_TOKEN=...
-
-# 3. Roda com perfil local
-./mvnw spring-boot:run -Dspring.profiles.active=local
 ```
-
-API disponível em `http://localhost:8080`.  
-Swagger UI: `http://localhost:8080/swagger-ui.html`
-
-### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
+C2A5E4CF606C4BED40C6DC8A77103FCE43BE30502F2BF5347CEF6E4D06630CE3
+57D114C3B02E42940083C50A2EA90C3BBB8C1A126A9E8ED11D94CD84B1822722
+9741A97AC565DAF81964FF75987E01045C43A38A6894ED758A91B847BF6C323D
+5349F4656DDEE2D90F54DC986D648DF36A87CE0A9B7A78058E0158F97FC7D59D
+3EA95FF592AAECC22A9205A4F32A26FAB71742DE532BBB25D10FBF7EAE9BE42B
+4C4151E1D63B0AEA6E8CEE58C6727DF047B409B6A4560D5448588F30E34FE769
+0B436978508B06A5BBFA01E1E7B96FB6C3FDC1022F9582D07D5E4B55006FB0FB
+8C9E230683A8D590A16B74A4915D6D0607C43E09020B7BEA46811C32714A31FD
+5D3611A8FB2BCB6B9CD7355BF77F98D268A81D48215B9F154BDADDFE942CEDE9
+9D73469EE9E1B8435501E8719CB8582E2F49B2D7D1667FB4C80A345F4C344B12
+7E7E02BA6166A449B95DE37962C474FBFDF2A6249C12420EAFC515EED58C8048
 ```
-
-App disponível em `http://localhost:5173`.  
-O servidor Vite faz proxy de `/api/*` para `http://localhost:8080`.
 
 ---
 
@@ -131,7 +117,7 @@ O servidor Vite faz proxy de `/api/*` para `http://localhost:8080`.
 ### GET /api/wrapped/{userId}
 
 Retorna os dados completos do wrapped para um usuário.
-
+Exemplo de resposta:
 ```json
 {
   "userId": "79BC2FC64A...",
@@ -198,15 +184,15 @@ Retorna os dados completos do wrapped para um usuário.
 
 ## Variáveis de Ambiente
 
-| Variável | Descrição |
-|----------|-----------|
-| `GROK_API_KEY` | Chave da API GROK |
-| `AWS_ACCESS_KEY_ID` | Access key da AWS |
-| `AWS_SECRET_ACCESS_KEY` | Secret key da AWS |
-| `AWS_SESSION_TOKEN` | Token de sessão AWS (credenciais temporárias) |
-| `SPRING_DATASOURCE_URL` | URL de conexão PostgreSQL |
-| `SPRING_DATASOURCE_USERNAME` | Usuário do banco |
-| `SPRING_DATASOURCE_PASSWORD` | Senha do banco |
+| Variável                     | Descrição                                     |
+|------------------------------|-----------------------------------------------|
+| `GROQ_API_KEY`               | Chave da API GROQ                             |
+| `AWS_ACCESS_KEY_ID`          | Access key da AWS                             |
+| `AWS_SECRET_ACCESS_KEY`      | Secret key da AWS                             |
+| `AWS_SESSION_TOKEN`          | Token de sessão AWS (credenciais temporárias) |
+| `SPRING_DATASOURCE_URL`      | URL de conexão PostgreSQL                     |
+| `SPRING_DATASOURCE_USERNAME` | Usuário do banco                              |
+| `SPRING_DATASOURCE_PASSWORD` | Senha do banco                                |
 
 ---
 
@@ -219,7 +205,7 @@ O projeto foi concebido como um "First Draft" para o hackathon — a prioridade 
 **Por que separar mapper de importer?**  
 Separação de responsabilidades — o importer orquestra o processo (lê S3, deduplica, persiste), o mapper apenas converte XML/JSON para entidade. Facilita testes unitários e manutenção futura.
 
-**Por que GROK API no backend?**
+**Por que GROQ API no backend?**
 Gerar uma retrospectiva personalizada para cada usuário, saindo do genérico. 
 
 ---

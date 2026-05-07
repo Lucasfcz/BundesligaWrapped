@@ -1,11 +1,13 @@
 package io.github.lucasfcz.bundesligawrapped.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.lucasfcz.bundesligawrapped.dto.slide.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import tools.jackson.databind.ObjectMapper;
+
+
 
 import java.util.List;
 import java.util.Map;
