@@ -1,12 +1,11 @@
 package io.github.lucasfcz.bundesligawrapped.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.lucasfcz.bundesligawrapped.dto.slide.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-
+import tools.jackson.databind.ObjectMapper;
 
 
 import java.util.List;
@@ -44,7 +43,7 @@ public class NarrativeService {
         try {
             Map<String, Object> body = Map.of(
                     "model", "llama-3.3-70b-versatile",
-                    "max_tokens", 300,
+                    "max_tokens", 150,
                     "messages", List.of(Map.of("role", "user", "content", prompt))
             );
 
@@ -57,7 +56,17 @@ public class NarrativeService {
                     .body(String.class);
 
             var response = objectMapper.readTree(json);
-            String text = response.path("choices").get(0).path("message").path("content").asText();
+            String text = response
+                    .path("choices")
+                    .path(0)
+                    .path("message")
+                    .path("content")
+                    .asText();
+
+            if (text == null || text.isBlank()) {
+                text = "What a season it's been! Keep following the Bundesliga.";
+            }
+            log.info("Narrative generated for userId={}", userId);
 
             return new NarrativeSlideDTO(text);
 

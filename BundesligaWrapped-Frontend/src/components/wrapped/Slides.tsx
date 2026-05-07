@@ -570,7 +570,10 @@ function Slide6({
 
         <div className="bw-quote a-fadeUp" style={{ animationDelay: "0.3s" }}>
           <span className="bw-quote-mark open">“</span>
-          <p className="bw-quote-text">{data.narrative.text}</p>
+          <p className="bw-quote-text">
+            {data.narrative?.text ??
+                "What a season it's been! Keep following the Bundesliga."}
+          </p>
           <span className="bw-quote-mark close">”</span>
         </div>
 
