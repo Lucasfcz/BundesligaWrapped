@@ -73,8 +73,8 @@ public class WrappedGeneratorService {
                             .orElse("Unknown");
                     return new TopPlayerSlideDTO(
                             ps.getFirstName() + " " + ps.getLastName(),
-                            clubName,
                             ps.getClubId(),
+                            clubName,
                             position,
                             safe(ps.getGoals()),
                             safe(ps.getAssists())
@@ -97,8 +97,8 @@ public class WrappedGeneratorService {
 
         var seasonHighlight = matchOpt
                 .map(m -> new SeasonHighlightSlideDTO(
-                                resolveClub(m.getHomeTeamName(), m.getHomeTeamId()),
-                                resolveClub(m.getGuestTeamName(), m.getGuestTeamId()),
+                        resolveClub(m.getHomeTeamId(), m.getHomeTeamName()),
+                        resolveClub(m.getGuestTeamId(), m.getGuestTeamName()),
                         m.getResult(),
                         safe(m.getSpectators()),
                         safe(m.getMatchDay())
@@ -209,14 +209,20 @@ public class WrappedGeneratorService {
         );
     }
 
-    private ClubRefDTO resolveClub(String name, String id) {
+    private ClubRefDTO resolveClub(String id, String name) {
         if (id != null) {
             var club = clubRepository.findByClubId(id);
             if (club.isPresent()) {
-                return new ClubRefDTO(id, club.get().getClubName());
+                return new ClubRefDTO(
+                        club.get().getClubId(),
+                        club.get().getClubName()
+                );
             }
         }
 
-        return new ClubRefDTO(id, name != null ? name : "Unknown");
+        return new ClubRefDTO(
+                id != null ? id : "UNKNOWN",
+                name != null ? name : "Unknown"
+        );
     }
 }
