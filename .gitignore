@@ -4,6 +4,8 @@ idea/
 .DS_Store
 Thumbs.db
 
+.idea
+
 
 **/target/
 **.class
