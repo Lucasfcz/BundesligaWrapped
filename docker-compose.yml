@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: bundesliga-db
+    environment:
+      POSTGRES_DB: bundesligawrapped
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - bundesliga_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./BundesligaWrapped-Backend
+    container_name: bundesliga-backend
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bundesligawrapped
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./BundesligaWrapped-Frontend
+    container_name: bundesliga-frontend
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"
+
+volumes:
+  bundesliga_data:
