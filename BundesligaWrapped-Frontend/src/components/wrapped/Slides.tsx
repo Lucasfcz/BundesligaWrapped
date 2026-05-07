@@ -422,29 +422,19 @@ function Slide4({ data }: { data: WrappedData }) {
 
 /* ---------------- Slide 5 ---------------- */
 function Slide5({ data }: { data: WrappedData }) {
-  const { seasonHighlight, favoriteClub } = data;
+  const { seasonHighlight } = data;
   const [home, away] = seasonHighlight.result.split(":").map((s) => s.trim());
 
-  const homeName = resolveTeamName(seasonHighlight.homeTeam, seasonHighlight.homeTeamId);
-  const guestName = resolveTeamName(seasonHighlight.guestTeam, seasonHighlight.guestTeamId);
+  const homeName = resolveTeamName(seasonHighlight.homeTeam.name, seasonHighlight.homeTeam.id);
+  const guestName = resolveTeamName(seasonHighlight.guestTeam.name, seasonHighlight.guestTeam.id);
 
-  // Discover whether favorite club played at home or away.
-  const isFavoriteHome =
-    homeName === favoriteClub.clubName || seasonHighlight.homeTeamId === favoriteClub.clubId;
-
-  const favoriteScore = isFavoriteHome ? home : away;
-  const opponentScore = isFavoriteHome ? away : home;
-  const opponentName = isFavoriteHome ? guestName : homeName;
-  const opponentId = isFavoriteHome ? seasonHighlight.guestTeamId : seasonHighlight.homeTeamId;
-
-  const favLogo = getClubLogo(favoriteClub.clubId);
-  const oppLogo = getClubLogo(opponentId);
+  const homeLogo = getClubLogo(seasonHighlight.homeTeam.id);
+  const guestLogo = getClubLogo(seasonHighlight.guestTeam.id);
 
   return (
     <section className="bw-slide bw-s5">
-      <ParticleCanvas color={favoriteClub.primaryColor || "#D4001A"} count={65} />
+      <ParticleCanvas color="#D4001A" count={65} />
       <div className="bw-s5-floods" />
-      <div className="bw-s5-scan" />
       <div className="bw-s5-vignette" />
       <ScanLine />
 
@@ -455,43 +445,24 @@ function Slide5({ data }: { data: WrappedData }) {
 
         <div className="bw-matchup a-fadeUp" style={{ animationDelay: "0.25s" }}>
           <div className="bw-team home">
-            {favLogo && (
-              <img
-                src={favLogo}
-                alt={favoriteClub.clubName}
-                className="bw-team-logo"
-                onError={(e) => ((e.currentTarget.style.display = "none"))}
-              />
-            )}
-            <span className="bw-team-name">{favoriteClub.clubName}</span>
+            {homeLogo && <img src={homeLogo} alt={homeName} className="bw-team-logo" />}
+            <span>{homeName}</span>
           </div>
           <div className="bw-score-block">
-            <span className="bw-score a-scoreSlam" style={{ animationDelay: "0.4s" }}>
-              {favoriteScore}
-            </span>
+            <span className="bw-score a-scoreSlam" style={{ animationDelay: "0.4s" }}>{home}</span>
             <span className="bw-score-colon">:</span>
-            <span className="bw-score a-scoreSlam" style={{ animationDelay: "0.55s" }}>
-              {opponentScore}
-            </span>
+            <span className="bw-score a-scoreSlam" style={{ animationDelay: "0.55s" }}>{away}</span>
           </div>
           <div className="bw-team away">
-            {oppLogo && (
-              <img
-                src={oppLogo}
-                alt={opponentName}
-                className="bw-team-logo"
-                onError={(e) => ((e.currentTarget.style.display = "none"))}
-              />
-            )}
-            <span className="bw-team-name">{opponentName}</span>
+            {guestLogo && <img src={guestLogo} alt={guestName} className="bw-team-logo" />}
+            <span>{guestName}</span>
           </div>
         </div>
 
         <div className="bw-pills a-fadeUp" style={{ animationDelay: "0.6s" }}>
           <div className="bw-pill">
             <div className="bw-pill-val">
-              🏟️{" "}
-              <CountUp target={seasonHighlight.spectators} duration={1800} delay={700} />
+              🏟️ <CountUp target={seasonHighlight.spectators} duration={1800} delay={700} />
             </div>
             <div className="bw-pill-lbl">FANS PRESENT</div>
           </div>
@@ -510,7 +481,7 @@ function Slide5({ data }: { data: WrappedData }) {
         <div className="bw-ticker-track">
           {Array.from({ length: 2 }).map((_, i) => (
             <span key={i}>
-              {favoriteClub.clubName} {favoriteScore}:{opponentScore} {opponentName} ·
+              {homeName} {seasonHighlight.result} {guestName} ·
               MATCHDAY {seasonHighlight.matchDay} · BUNDESLIGA 2024/25 ·
             </span>
           ))}
