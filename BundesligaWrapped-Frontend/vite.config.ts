@@ -17,6 +17,9 @@ export default defineConfig({
     },
   },
   vite: {
+    css: {
+      postcss: './postcss.config.js',
+    },
     server: {
       proxy: {
         "/api": {
