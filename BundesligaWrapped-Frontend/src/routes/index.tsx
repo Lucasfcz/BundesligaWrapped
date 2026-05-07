@@ -45,48 +45,46 @@ function Index() {
   }, []);
 
   const reveal = async (userId: string) => {
-  setError(null);
-  setStage("loading");
-  const startedAt = Date.now();
+    setError(null);
+    setStage("loading");
 
-  let result: WrappedData | null = null;
+    const startedAt = Date.now();
 
-  try {
-    const apiBaseUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "") ?? "";
-    const res = await fetch(
-      `${apiBaseUrl}/api/wrapped/${encodeURIComponent(userId)}`,
-      { signal: AbortSignal.timeout(200000) }
-    );
+    let result: WrappedData | null = null;
 
-    if (res.ok) {
-      const json = (await res.json()) as WrappedData;
-      result = { ...json, userId: json.userId ?? userId };
-    } else if (res.status === 404) {
-      setError("Fan ID not found. Please check your ID and try again.");
-    } else {
-      setError(`Something went wrong (${res.status}). Please try again.`);
+    try {
+      const apiBaseUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "") ?? "";
+
+      const res = await fetch(`${apiBaseUrl}/api/wrapped/${encodeURIComponent(userId)}`);
+
+      if (res.ok) {
+        const json = (await res.json()) as WrappedData;
+
+        result = {
+          ...json,
+          userId: json.userId ?? userId,
+        };
+      } else if (res.status === 404) {
+        setError("Fan ID not found. Please check your ID and try again.");
+      } else {
+        setError(`Something went wrong (${res.status}). Please try again.`);
+      }
+    } catch {
+      setError("Could not connect to the server. Please try again in a moment.");
     }
-  } catch (err) {
-    const isTimeout = err instanceof Error && err.name === "TimeoutError";
-    setError(
-      isTimeout
-        ? "The server is taking too long to respond. Please try again."
-        : "Could not connect to the server. Please try again in a moment."
-    );
-  }
 
-  const elapsed = Date.now() - startedAt;
-  const wait = Math.max(0, 2800 - elapsed);
+    const elapsed = Date.now() - startedAt;
+    const wait = Math.max(0, 2800 - elapsed);
 
-  window.setTimeout(() => {
-    if (result) {
-      setData(result);
-      setStage("slides");
-    } else {
-      setStage("landing");
-    }
-  }, wait);
-};
+    window.setTimeout(() => {
+      if (result) {
+        setData(result);
+        setStage("slides");
+      } else {
+        setStage("landing");
+      }
+    }, wait);
+  };
 
   const restart = () => {
     setStage("landing");
