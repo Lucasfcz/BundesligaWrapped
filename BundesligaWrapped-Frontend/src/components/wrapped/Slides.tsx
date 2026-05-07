@@ -423,24 +423,19 @@ function Slide4({ data }: { data: WrappedData }) {
 /* ---------------- Slide 5 ---------------- */
 function Slide5({ data }: { data: WrappedData }) {
   const { seasonHighlight, favoriteClub } = data;
-
-  const getTeamName = (team: any) => (typeof team === 'object' ? team.name : team);
-  const getTeamId = (team: any, fallbackId?: string) => (typeof team === 'object' ? team.id : fallbackId);
-
-  const homeName = getTeamName(seasonHighlight.homeTeam);
-  const guestName = getTeamName(seasonHighlight.guestTeam);
-  
-  const homeId = getTeamId(seasonHighlight.homeTeam, seasonHighlight.homeTeamId);
-  const guestId = getTeamId(seasonHighlight.guestTeam, seasonHighlight.guestTeamId);
-
   const [home, away] = seasonHighlight.result.split(":").map((s) => s.trim());
 
-  const isFavoriteHome = homeName === favoriteClub.clubName || homeId === favoriteClub.clubId;
+  const homeName = resolveTeamName(seasonHighlight.homeTeam, seasonHighlight.homeTeamId);
+  const guestName = resolveTeamName(seasonHighlight.guestTeam, seasonHighlight.guestTeamId);
+
+  // Discover whether favorite club played at home or away.
+  const isFavoriteHome =
+    homeName === favoriteClub.clubName || seasonHighlight.homeTeamId === favoriteClub.clubId;
 
   const favoriteScore = isFavoriteHome ? home : away;
   const opponentScore = isFavoriteHome ? away : home;
   const opponentName = isFavoriteHome ? guestName : homeName;
-  const opponentId = isFavoriteHome ? guestId : homeId;
+  const opponentId = isFavoriteHome ? seasonHighlight.guestTeamId : seasonHighlight.homeTeamId;
 
   const favLogo = getClubLogo(favoriteClub.clubId);
   const oppLogo = getClubLogo(opponentId);
@@ -575,10 +570,7 @@ function Slide6({
 
         <div className="bw-quote a-fadeUp" style={{ animationDelay: "0.3s" }}>
           <span className="bw-quote-mark open">“</span>
-          <p className="bw-quote-text">
-            {data.narrative?.text ??
-                "What a season it's been! Keep following the Bundesliga."}
-          </p>
+          <p className="bw-quote-text">{data.narrative.text}</p>
           <span className="bw-quote-mark close">”</span>
         </div>
 

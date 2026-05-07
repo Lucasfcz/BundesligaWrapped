@@ -39,8 +39,8 @@ export type WrappedData = {
     clubShortName?: string;
   };
   seasonHighlight: {
-    homeTeam: string | { id: string; name: string }; 
-    guestTeam: string | { id: string; name: string };
+    homeTeam: string;
+    guestTeam: string;
     result: string;
     spectators: number;
     matchDay: number;

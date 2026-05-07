@@ -17,13 +17,10 @@ export default defineConfig({
     },
   },
   vite: {
-    css: {
-      postcss: './postcss.config.js',
-    },
     server: {
       proxy: {
         "/api": {
-          target: "https://bundesligawrapped-1.onrender.com",
+          target: "http://localhost:8080",
           changeOrigin: true,
           secure: false,
         },
