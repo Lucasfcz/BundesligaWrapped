@@ -22,8 +22,8 @@ public class MatchMapper {
                 parseInteger(general.getAttribute("MatchDay")),
                 parseKickoffTime(general.getAttribute("KickoffTime")),
                 general.getAttribute("HomeTeamId"),
-                general.getAttribute("HomeTeamName"),
-                general.getAttribute("GuestTeamId"),
+                general.getAttribute("GuestTeamId"),    // ← trocado
+                general.getAttribute("HomeTeamName"),   // ← trocado
                 general.getAttribute("GuestTeamName"),
                 general.getAttribute("Result"),
                 environment.getAttribute("StadiumName"),
