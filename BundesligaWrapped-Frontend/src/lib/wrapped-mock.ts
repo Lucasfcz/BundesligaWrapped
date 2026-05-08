@@ -39,8 +39,8 @@ export type WrappedData = {
     clubShortName?: string;
   };
   seasonHighlight: {
-    homeTeam: { id: string; name: string };
-    guestTeam: { id: string; name: string };
+    homeTeam: string;
+    guestTeam: string;
     result: string;
     spectators: number;
     matchDay: number;
@@ -87,18 +87,23 @@ export const MOCK: WrappedData = {
     clubShortName: "Bayern",
   },
   seasonHighlight: {
-    homeTeam: { id: "DFL-CLU-000007", name: "Borussia Dortmund" },
-    guestTeam: { id: "DFL-CLU-00000F", name: "Eintracht Frankfurt" },
+    homeTeam: "FC Bayern München",
+    guestTeam: "Eintracht Frankfurt",
     result: "2:0",
     spectators: 81365,
     matchDay: 1,
+    homeTeamId: "DFL-CLU-00000G",
+    guestTeamId: "DFL-CLU-00000F",
   },
   narrative: {
     text: "You're a true Match Center Addict — 202 visits don't lie! With FC Bayern in your heart and Kane leading with 26 goals, April was your month to shine. What a Bundesliga season!",
   },
 };
 
-export const FAN_TYPES: Record<string, { emoji: string; color: string; desc: string }> = {
+export const FAN_TYPES: Record<
+  string,
+  { emoji: string; color: string; desc: string }
+> = {
   "Match Center Addict": { emoji: "📊", color: "#D4001A", desc: "You live for the data." },
   "Stats Nerd": { emoji: "🎬", color: "#C9A84C", desc: "Never miss a highlight." },
   "Story Lover": { emoji: "📖", color: "#4A9FD4", desc: "You follow every storyline." },
@@ -109,4 +114,4 @@ export function fanTypeMeta(type: string) {
   return FAN_TYPES[type] ?? FAN_TYPES["Casual Fan"];
 }
 
-export const MONTHS = ["AUG", "SEP", "OCT", "NOV", "DEC", "JAN", "FEB", "MAR", "APR", "MAY"];
+export const MONTHS = ["AUG","SEP","OCT","NOV","DEC","JAN","FEB","MAR","APR","MAY"];
