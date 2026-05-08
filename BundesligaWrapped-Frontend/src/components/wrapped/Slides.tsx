@@ -425,8 +425,8 @@ function Slide5({ data }: { data: WrappedData }) {
   const { seasonHighlight } = data;
   const [home, away] = seasonHighlight.result.split(":").map((s) => s.trim());
 
-  const homeName = resolveTeamName(seasonHighlight.homeTeam.name, seasonHighlight.homeTeam.id);
-  const guestName = resolveTeamName(seasonHighlight.guestTeam.name, seasonHighlight.guestTeam.id);
+  const homeName = seasonHighlight.homeTeam.name;
+  const guestName = seasonHighlight.guestTeam.name;
 
   const homeLogo = getClubLogo(seasonHighlight.homeTeam.id);
   const guestLogo = getClubLogo(seasonHighlight.guestTeam.id);
