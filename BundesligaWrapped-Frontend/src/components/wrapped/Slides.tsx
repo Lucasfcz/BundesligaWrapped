@@ -487,7 +487,7 @@ function Slide5({ data }: { data: WrappedData }) {
             <div className="bw-pill-lbl">FANS PRESENT</div>
           </div>
           <div className="bw-pill">
-            <div className="bw-pill-val">📅 {seasonHighlight.matchDay}</div>
+            <div className="bw-pill-val">August 24, 2024</div>
             <div className="bw-pill-lbl">MATCHDAY</div>
           </div>
         </div>
